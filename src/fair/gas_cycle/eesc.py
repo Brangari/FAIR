@@ -45,11 +45,18 @@ def calculate_eesc(
     At present, CFC-11 must be provided in the scenario, with species type cfc-11.
     """
     # EESC is in terms of CFC11-eq
-    cfc11_fr = fractional_release[:, :, :, cfc_11_index]
+    cfc11_fr = fractional_release[..., cfc_11_index]
     eesc_out = np.nansum(
         (
-            cl_atoms * concentration * fractional_release / cfc11_fr
-            + br_cl_ratio * br_atoms * concentration * fractional_release / cfc11_fr
+            cl_atoms[..., halogen_indices]
+            * concentration[..., halogen_indices]
+            * fractional_release[..., halogen_indices]
+            / cfc11_fr
+            + br_cl_ratio
+            * br_atoms[..., halogen_indices]
+            * concentration[..., halogen_indices]
+            * fractional_release[..., halogen_indices]
+            / cfc11_fr
         )
         * cfc11_fr,
         axis=SPECIES_AXIS,

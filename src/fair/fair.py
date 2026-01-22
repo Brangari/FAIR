@@ -802,39 +802,43 @@ class FAIR:
                     "mode."
                 )
 
-        if "eesc" not in list(
-            self.properties_df.loc[self.properties_df["input_mode"] == "concentration"][
-                "type"
-            ]
-        ) and (
+        if (
             "eesc"
-            in list(
+            not in list(
                 self.properties_df.loc[
-                    self.properties_df["input_mode"] == "calculated"
+                    self.properties_df["input_mode"] == "concentration"
                 ]["type"]
             )
             and (
-                "cfc-11"
-                not in list(
+                "eesc"
+                in list(
                     self.properties_df.loc[
-                        self.properties_df["input_mode"] == "emissions"
+                        self.properties_df["input_mode"] == "calculated"
                     ]["type"]
                 )
-                and "cfc-11"
-                not in list(
-                    self.properties_df.loc[
-                        self.properties_df["input_mode"] == "concentration"
-                    ]["type"]
+                and (
+                    "cfc-11"
+                    not in list(
+                        self.properties_df.loc[
+                            self.properties_df["input_mode"] == "emissions"
+                        ]["type"]
+                    )
+                    and "cfc-11"
+                    not in list(
+                        self.properties_df.loc[
+                            self.properties_df["input_mode"] == "concentration"
+                        ]["type"]
+                    )
                 )
             )
+            and self.ch4_method == "thornhill2021"
         ):
-            if self.ch4_method == "thornhill2021":
-                raise ValueError(
-                    "For ch4_method = thornhill2021, EESC needs to be input as "
-                    "concentrations, or to be calculated from emissions of "
-                    "halogenated species which requires at least cfc-11 to be "
-                    "provided in emissions or concentration driven mode."
-                )
+            raise ValueError(
+                "For ch4_method = thornhill2021, EESC needs to be input as "
+                "concentrations, or to be calculated from emissions of "
+                "halogenated species which requires at least cfc-11 to be "
+                "provided in emissions or concentration driven mode."
+            )
 
         co2_to_forcing = False
         ch4_to_forcing = False
